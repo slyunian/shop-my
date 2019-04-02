@@ -1,12 +1,12 @@
 # vue-sun
 
-> A Vue.js project
+> 后台管理项目
 
 ## Build Setup
 
-``` bash
+```bash
 # install dependencies
-npm install
+npm install11
 
 # serve with hot reload at localhost:8080
 npm run dev
