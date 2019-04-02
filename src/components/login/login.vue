@@ -46,22 +46,23 @@ export default {
         this.$axios
           .post('http://localhost:8888/api/private/v1/login', this.ruleForm)
           .then(res => {
-            console.log(res)
             // 判断是否登录成功
             if (res.data.meta.status === 200) {
+              // 存储token值
+              localStorage.setItem('token', res.data.data.token)
               this.$message({
                 type: 'success',
                 message: '登录成功',
-                duration: 800
+                duration: 500
               })
               this.$router.push('/home')
-              // 登录保持
-              localStorage.setItem('userinfo', JSON.stringify(this.ruleForm))
+              // 登录保持--my
+              // localStorage.setItem('userinfo', JSON.stringify(this.ruleForm))
             } else {
               this.$message({
                 type: 'error',
                 message: '登录失败',
-                duration: 800
+                duration: 500
               })
             }
           })

@@ -5,7 +5,7 @@ import Home from '@/components/home/home.vue'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
@@ -21,3 +21,17 @@ export default new Router({
     }
   ]
 })
+
+// 导航收尾
+router.beforeEach((to, from, next) => {
+  // 判断当前是否是登录页面
+  if (to.path === '/login') {
+    next()
+  } else {
+    // 判断当前是否登录了=>看看有没有token值
+    let token = localStorage.getItem('token')
+    token ? next() : next('/login')
+  }
+})
+
+export default router

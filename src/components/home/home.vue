@@ -16,7 +16,7 @@
         <el-col :span="8">
           <div class="head-right">
             富婆年年有,今年特别多
-            <a href="javascript:;" @click="isoutlogin()">退出</a>
+            <a @click.prevent="isoutlogin()">退出</a>
           </div>
         </el-col>
       </el-row>
@@ -30,6 +30,7 @@
 
 <script>
 export default {
+  // 判断登录保持 formy
   // beforeCreate () {
   //   if (!localStorage.getItem('userinfo')) {
   //     this.$message({
@@ -48,17 +49,22 @@ export default {
         type: 'warning'
       })
         .then(() => {
+          // 删除token
+          localStorage.removeItem('token')
+          // 跳转页面
+          this.$router.push('/login')
+          // 提示删除成功
           this.$message({
             type: 'success',
-            message: '退出成功'
+            message: '退出成功',
+            duration: 500
           })
-          this.$router.push('/login')
-          localStorage.removeItem('userinfo')
         })
-        .catch(action => {
+        .catch(() => {
           this.$message({
             type: 'info',
-            message: action === 'cancel' ? '已取消退出' : '已经取消退出'
+            message: '已取消退出',
+            duration: 500
           })
         })
     }
@@ -66,38 +72,37 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang='less'>
 .home {
   height: 100%;
-}
-
-/* 头部 */
-.home-header {
-  height: 100%;
-  min-width: 900px;
-  background-color: #b3c1cd;
-}
-.head-center {
-  color: #ffffff;
-  font-size: 28px;
-  line-height: 60px;
-}
-.head-right {
-  line-height: 60px;
-  float: right;
-  padding-right: 30px;
-}
-.head-right a {
-  color: #daa520;
-}
-
-/* 侧边 */
-.home-aside {
-  height: 100%;
-  background-color: #545c64;
-}
-.home-main {
-  height: 100%;
-  background-color: #eaeef1;
+  /* 头部 */
+  .home-header {
+    height: 100%;
+    min-width: 900px;
+    background-color: #b3c1cd;
+  }
+  .head-center {
+    color: #ffffff;
+    font-size: 28px;
+    line-height: 60px;
+  }
+  .head-right {
+    line-height: 60px;
+    float: right;
+    padding-right: 30px;
+  }
+  .head-right a {
+    color: #daa520;
+  }
+  /* 侧边 */
+  .home-aside {
+    height: 100%;
+    background-color: #545c64;
+  }
+  //内容
+  .home-main {
+    height: 100%;
+    background-color: #eaeef1;
+  }
 }
 </style>
