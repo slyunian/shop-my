@@ -22,24 +22,20 @@
       </el-row>
     </el-header>
     <el-container>
-      <el-aside class="home-aside">Aside</el-aside>
-      <el-main class="home-main">Main</el-main>
+      <el-aside class="home-aside">
+        <Aside></Aside>
+      </el-aside>
+      <el-main class="home-main">
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
 
 <script>
+// eslint-disable-next-line
+import Aside from "@/comment/aside.vue";
 export default {
-  // 判断登录保持 formy
-  // beforeCreate () {
-  //   if (!localStorage.getItem('userinfo')) {
-  //     this.$message({
-  //       type: 'warning',
-  //       message: '请先登录'
-  //     })
-  //     this.$router.push('/login')
-  //   }
-  // },
   methods: {
     isoutlogin () {
       this.$confirm('是否退出登录', '确认信息', {
@@ -68,6 +64,9 @@ export default {
           })
         })
     }
+  },
+  components: {
+    Aside
   }
 }
 </script>

@@ -8,7 +8,20 @@ import 'element-ui/lib/theme-chalk/index.css'
 import 'element-ui/lib/theme-chalk/display.css'
 import './comment/css/comment.css'
 import axios from 'axios'
+// 设置基础路径
+axios.defaults.baseURL = 'http://localhost:8888/api/private/v1/'
 Vue.prototype.$axios = axios
+// 在所有的請求前先执行统一处理,处理后就不用单独设置请求头了
+// axios拦截器
+axios.interceptors.request.use(
+  config => {
+    config.headers.Authorization = localStorage.getItem('token')
+    return config
+  },
+  error => {
+    return Promise.reject(error)
+  }
+)
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
