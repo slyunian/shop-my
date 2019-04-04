@@ -33,42 +33,71 @@
 </template>
 
 <script>
-// eslint-disable-next-line
+/* eslint-disable */
 import Aside from "@/comment/aside.vue";
 export default {
   methods: {
-    isoutlogin () {
-      this.$confirm('是否退出登录', '确认信息', {
+    //更改前退出逻辑
+    isoutlogin1() {
+      this.$confirm("是否退出登录", "确认信息", {
         distinguishCancelAndClose: true,
-        confirmButtonText: '退出',
-        cancelButtonText: '取消',
-        type: 'warning'
+        confirmButtonText: "退出",
+        cancelButtonText: "取消",
+        type: "warning"
       })
         .then(() => {
           // 删除token
-          localStorage.removeItem('token')
+          localStorage.removeItem("token");
           // 跳转页面
-          this.$router.push('/login')
+          this.$router.push("/login");
           // 提示删除成功
           this.$message({
-            type: 'success',
-            message: '退出成功',
+            type: "success",
+            message: "退出成功",
             duration: 500
-          })
+          });
         })
         .catch(() => {
           this.$message({
-            type: 'info',
-            message: '已取消退出',
+            type: "info",
+            message: "已取消退出",
             duration: 500
-          })
-        })
+          });
+        });
+    },
+    //更改后退出逻辑
+    async isoutlogin() {
+      // 将可能报错的代码放在try内执行
+      try {
+        await this.$confirm("是否退出登录", "确认信息", {
+          distinguishCancelAndClose: true,
+          confirmButtonText: "退出",
+          cancelButtonText: "取消",
+          type: "warning"
+        });
+        // 删除token
+        localStorage.removeItem("token");
+        // 跳转页面
+        this.$router.push("/login");
+        // 提示删除成功
+        this.$message({
+          type: "success",
+          message: "退出成功",
+          duration: 500
+        });
+      } catch (error) {
+        this.$message({
+          type: "info",
+          message: "已取消退出",
+          duration: 500
+        });
+      }
     }
   },
   components: {
     Aside
   }
-}
+};
 </script>
 
 <style scoped lang='less'>

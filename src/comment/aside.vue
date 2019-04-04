@@ -70,4 +70,7 @@ export default {
 </script>
 
 <style>
+.el-menu {
+  border: none;
+}
 </style>
