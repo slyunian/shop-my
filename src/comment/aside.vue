@@ -1,14 +1,15 @@
 <template>
   <el-col>
     <!-- router:false=>true  => 启动路由功能  默认为false-->
+    <!-- unique-opened只有一个子菜单展开 -->
     <el-menu
       class="el-menu-vertical-demo"
       background-color="#545c64"
       text-color="#fff"
       active-text-color="#ffd04b"
       :router="true"
-      @open="handleOpen"
-      @close="handleClose"
+      unique-opened
+      default-active="/"
     >
       <el-submenu index="1">
         <!-- 标题 -->
@@ -57,16 +58,7 @@
   </el-col>
 </template>
 <script>
-export default {
-  methods: {
-    handleOpen (key, keyPath) {
-      console.log('打开了')
-    },
-    handleClose (key, keyPath) {
-      console.log('关上了')
-    }
-  }
-}
+export default {}
 </script>
 
 <style>
