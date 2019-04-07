@@ -19,6 +19,13 @@ export default {
         email: '',
         mobile: ''
       },
+      // 更新规则
+      updateFrom: {
+        id: '',
+        username: '',
+        email: '',
+        mobile: ''
+      },
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -38,11 +45,22 @@ export default {
         mobile: [
           { min: 10, max: 11, message: '请输入正确格式的手机', trigger: 'blur' }
         ]
-      }
+      },
+      // 分配角色弹框
+      rolesVisible: false,
+      // 分配角色表单对象
+      assignRoleForm: {
+        username: '测试',
+        // 角色id
+        rid: '',
+        id: ''
+      },
+      rolesList: []
     }
   },
   created () {
     this.loadUsersList(1, this.searchText)
+    this.loadRolesList()
   },
   methods: {
     // 加载数据
@@ -65,6 +83,8 @@ export default {
     },
     // 切换页码
     changCurrent (page) {
+      // this.pagenum = page
+      this.$router.push('/users/' + page)
       this.loadUsersList(page, this.searchText)
     },
     // 搜索
@@ -94,7 +114,7 @@ export default {
           message: res.data.meta.msg
         })
         // 页面个数可能会发生更改
-        this.loadUsersList()
+        this.loadUsersList(this.pagenum)
         // 重置表单
         this.resetForm()
       })
@@ -103,7 +123,6 @@ export default {
     resetForm () {
       this.$refs.addForm.resetFields()
       this.dialogFormVisible = false
-      this.dialogUpdateVisible = false
     },
     // 删除单个用户
     async delUser (id) {
@@ -116,21 +135,22 @@ export default {
     },
     // 编辑框赋值
     updateUser (userinfo) {
+      console.log(userinfo)
       this.dialogUpdateVisible = true
-      this.addForm.username = userinfo.username
-      this.addForm.email = userinfo.email
-      this.addForm.mobile = userinfo.mobile
+      this.updateFrom.username = userinfo.username
+      this.updateFrom.email = userinfo.email
+      this.updateFrom.mobile = userinfo.mobile
+      this.updateFrom.id = userinfo.id
+      console.log(this.updateFrom)
     },
-    async uUpdate (id) {
-      console.log(id)
+    async uUpdate () {
       let obj = {
-        username: this.addForm.username,
-        email: this.addForm.email,
-        mobile: this.addForm.mobile
+        username: this.updateFrom.username,
+        email: this.updateFrom.email,
+        mobile: this.updateFrom.mobile
       }
       console.log(obj)
-
-      let res = await this.$axios.put(`users/${id}`, obj)
+      let res = await this.$axios.put(`users/${this.updateFrom.id}`, obj)
       // 提示框
       this.$message({
         type: 'success',
@@ -139,9 +159,43 @@ export default {
       // 关闭编辑
       this.dialogUpdateVisible = false
       // 重新获取页面数据
-      this.loadUsersList()
-      // 清空数据
-      this.resetForm()
+      this.loadUsersList(this.pagenum)
+    },
+    // 加载分配角色下拉框内容
+    async loadRolesList () {
+      let res = await this.$axios.get('roles')
+      console.log(res)
+      this.rolesList = res.data.data
+    },
+    // 显示当前的角色
+    async showAssign (row) {
+      const { username, id } = row
+      // 用户名
+      this.assignRoleForm.username = username
+      this.assignRoleForm.id = id
+      // 根据用户id可以找到角色id
+      let res = await this.$axios.get('users/' + id)
+      // rid=-1代表没有分配过角色的情况所以需要设置为''
+      this.assignRoleForm.rid =
+        res.data.data.rid === -1 ? '' : res.data.data.rid
+      // 打开弹窗
+      this.rolesVisible = true
+    },
+    // 分配新的角色
+    async selectRoles () {
+      const { id, rid } = this.assignRoleForm
+      let res = await this.$axios.put(`users/${id}/role`, { rid })
+      console.log(res)
+      if (res.data.meta.status === 200) {
+        // 关闭弹框
+        this.rolesVisible = false
+        this.$message({
+          message: '分配角色成功',
+          type: 'success'
+        })
+        // 刷新列表
+        this.loadRolesList()
+      }
     }
   }
 }

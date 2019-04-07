@@ -92,42 +92,6 @@
           plain
           @click="updateUser(scope.row)"
         ></el-button>
-        <!-- 编辑表单 -->
-        <el-dialog title="更改用户信息" :visible.sync="dialogUpdateVisible">
-          <el-form
-            :model="addForm"
-            :rules="rules"
-            ref="addForm"
-            label-width="100px"
-          >
-            <el-form-item label="用户名" prop="username">
-              <el-input
-                v-model="addForm.username"
-                :disabled="true"
-                :value="addForm.username"
-              ></el-input>
-            </el-form-item>
-            <el-form-item label="邮箱" prop="email">
-              <el-input
-                v-model="addForm.email"
-                :value="addForm.email"
-              ></el-input>
-            </el-form-item>
-            <el-form-item label="电话" prop="mobile">
-              <el-input
-                v-model="addForm.mobile"
-                :value="addForm.mobile"
-              ></el-input>
-            </el-form-item>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="resetForm">取 消</el-button>
-            <el-button type="primary" @click="uUpdate(scope.row.id)"
-              >确 定</el-button
-            >
-          </div>
-        </el-dialog>
-
         <!-- 删除 -->
         <el-button
           size="mini"
@@ -137,9 +101,15 @@
           @click="delUser(scope.row.id)"
         ></el-button>
         <!-- 更改角色 -->
-        <el-button size="mini" type="success" icon="el-icon-check" plain
+        <el-button
+          size="mini"
+          type="success"
+          icon="el-icon-check"
+          plain
+          @click="showAssign(scope.row)"
           >分配角色</el-button
         >
+        <!-- @click="updateRoles(scope.row)" -->
       </template>
     </el-table-column>
   </el-table>
@@ -152,4 +122,55 @@
     :page-size="2"
     @current-change="changCurrent"
   ></el-pagination>
+  <!-- 编辑表单 -->
+  <el-dialog title="更改用户信息" :visible.sync="dialogUpdateVisible">
+    <el-form :model="updateFrom" ref="updateFrom" label-width="100px">
+      <el-form-item label="用户名" prop="username">
+        <el-input
+          v-model="updateFrom.username"
+          :disabled="true"
+          :value="updateFrom.username"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="邮箱" prop="email">
+        <el-input
+          v-model="updateFrom.email"
+          :value="updateFrom.email"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="电话" prop="mobile">
+        <el-input
+          v-model="updateFrom.mobile"
+          :value="updateFrom.mobile"
+        ></el-input>
+      </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="dialogUpdateVisible = false">取 消</el-button>
+      <el-button type="primary" @click="uUpdate">确 定</el-button>
+    </div>
+  </el-dialog>
+  <!-- 分配角色弹出框 -->
+  <el-dialog title="提示" :visible.sync="rolesVisible" width="60%">
+    <el-form :model="assignRoleForm" label-width="80px">
+      <el-form-item label="用户名">
+        <el-tag>{{ assignRoleForm.username }}</el-tag>
+      </el-form-item>
+      <el-form-item label="角色列表">
+        <el-select v-model="assignRoleForm.rid" placeholder="请选择角色">
+          <!-- label : 展示  value:才是与rid绑定的值 -->
+          <el-option
+            v-for="item in rolesList"
+            :key="item.id"
+            :label="item.roleName"
+            :value="item.id"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+    </el-form>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="rolesVisible = false">取 消</el-button>
+      <el-button type="primary" @click="selectRoles">确 定</el-button>
+    </span>
+  </el-dialog>
 </div>

@@ -1,10 +1,5 @@
-<template>
-  <div>roles</div>
-</template>
+<template src='./roles.html'></template>
 
-<script>
-export default {}
+<script src='./roles.js'>
 </script>
-
-<style>
-</style>
+<style lang="less" scoped src='./roles.less'></style>

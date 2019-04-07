@@ -11,54 +11,39 @@
       unique-opened
       default-active="/"
     >
-      <el-submenu index="1">
+      <el-submenu :index="item1.id+''" v-for="item1 in asideData" :key="item1.id">
         <!-- 标题 -->
         <template slot="title">
           <i class="el-icon-location"></i>
-          <span>用户管理</span>
+          <span>{{item1.authName}}</span>
         </template>
-        <el-menu-item index="users">用户列表</el-menu-item>
-      </el-submenu>
-      <el-submenu index="2">
-        <!-- 标题 -->
-        <template slot="title">
-          <i class="el-icon-location"></i>
-          <span>权限管理</span>
-        </template>
-        <el-menu-item index="roles">角色类表</el-menu-item>
-        <el-menu-item index="rights">权限类表</el-menu-item>
-      </el-submenu>
-      <el-submenu index="3">
-        <!-- 标题 -->
-        <template slot="title">
-          <i class="el-icon-location"></i>
-          <span>商品管理</span>
-        </template>
-        <el-menu-item index="3-1">商品列表</el-menu-item>
-        <el-menu-item index="3-2">分类参数</el-menu-item>
-        <el-menu-item index="3-3">商品分类</el-menu-item>
-      </el-submenu>
-      <el-submenu index="4">
-        <!-- 标题 -->
-        <template slot="title">
-          <i class="el-icon-location"></i>
-          <span>订单管理</span>
-        </template>
-        <el-menu-item index="4-1">角色类表</el-menu-item>
-      </el-submenu>
-      <el-submenu index="5">
-        <!-- 标题 -->
-        <template slot="title">
-          <i class="el-icon-location"></i>
-          <span>数据统计</span>
-        </template>
-        <el-menu-item index="5-1">数据报表</el-menu-item>
+        <el-menu-item
+          v-for="item2 in item1.children"
+          :key="item2.id"
+          :index="'/'+item2.path"
+        >{{item2.authName}}</el-menu-item>
       </el-submenu>
     </el-menu>
   </el-col>
 </template>
 <script>
-export default {}
+export default {
+  data () {
+    return {
+      asideData: ''
+    }
+  },
+  created () {
+    this.getdata()
+  },
+  methods: {
+    async getdata () {
+      let res = await this.$axios.get('menus')
+      this.asideData = res.data.data
+      console.log(res.data.data)
+    }
+  }
+}
 </script>
 
 <style>
