@@ -40,7 +40,7 @@ export default {
     async getdata () {
       let res = await this.$axios.get('menus')
       this.asideData = res.data.data
-      console.log(res.data.data)
+      // console.log(res.data.data)
     }
   }
 }
