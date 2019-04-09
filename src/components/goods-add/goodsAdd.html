@@ -1,0 +1,91 @@
+<div>
+  <!-- 步骤条 -->
+  <el-steps :active="activenum" v-model="activenum" finish-status="success">
+    <el-step title="第一步" description="基本信息"></el-step>
+    <el-step title="第二步" description="商品图片"></el-step>
+    <el-step title="第三步" description="商品内容"></el-step>
+  </el-steps>
+  <!-- 标签页 -->
+  <el-tabs
+    v-model="activeName"
+    style="height: 500px;"
+    tabPosition="left"
+    @tab-click="clickTabs"
+  >
+    <!-- 基本信息 -->
+    <el-tab-pane label="基本信息">
+      <el-form ref="form" name="one" :model="form" label-width="80px">
+        <el-form-item label="商品名称">
+          <el-input v-model="form.goods_name"></el-input>
+        </el-form-item>
+        <el-form-item label="商品价格">
+          <el-input v-model="form.goods_price"></el-input>
+        </el-form-item>
+        <el-form-item label="商品重量">
+          <el-input v-model="form.goods_weight"></el-input>
+        </el-form-item>
+        <el-form-item label="商品数量">
+          <el-input v-model="form.goods_number"></el-input>
+        </el-form-item>
+        <el-form-item label="商品分类">
+          <el-cascader
+            v-model="form.goods_cat"
+            :options="options"
+            change-on-select
+            :props="defaultProps"
+          ></el-cascader>
+        </el-form-item>
+        <el-form-item label="是否促销">
+          <!-- 单选框比较特殊 label是负责收集的 -->
+          <template>
+            <!-- 单选框比较特殊 label是负责收集的 -->
+            <el-radio v-model="form.goods_isPromotion" :label="true"
+              >是</el-radio
+            >
+            <el-radio v-model="form.goods_isPromotion" :label="false"
+              >否</el-radio
+            >
+          </template>
+        </el-form-item>
+      </el-form>
+      <el-button @click="next('two',2)" type="primary">下一步</el-button>
+    </el-tab-pane>
+    <!-- 商品图片 -->
+    <el-tab-pane label="商品图片" name="two">
+      <!-- 上传图片 -->
+      <!--
+          action 上传图片的接口 不要忘记基路径
+          list-type显示的类型
+          on-preview 预览的回调
+          on-remove 删除的回调
+          on-success 成功后调用
+          header 上传的请求头  加token
+       -->
+      <el-upload
+        action="http://localhost:8888/api/private/v1/upload"
+        list-type="picture-card"
+        :on-preview="handlePictureCardPreview"
+        :on-remove="handleRemove"
+        :on-success="uploadSuccess"
+        :headers="headers"
+      >
+        <!-- 框框内容显示的添加图片 -->
+        <i class="el-icon-plus"></i>
+      </el-upload>
+      <!-- 预览的弹框 -->
+      <el-dialog :visible.sync="dialogVisible">
+        <img width="100%" :src="dialogImageUrl" alt="" />
+      </el-dialog>
+      <el-button @click="next('three',3)" type="primary">下一步</el-button>
+    </el-tab-pane>
+    <!-- 商品内容 -->
+    <el-tab-pane label="商品内容" name="three">
+      <quill-editor
+        height="300px"
+        :v-model="form.goods_introduce"
+        :options="editorOption"
+      ></quill-editor>
+      <el-button type="primary" @click="addGoods">确定</el-button>
+    </el-tab-pane>
+  </el-tabs>
+</div>
